@@ -59,7 +59,7 @@ resource "aws_iam_policy" "codebuild_policy" {
       {
         Effect = "Allow"
         Action = [
-          "s3:GetObject",
+          "s3:Get*",
           "s3:GetObjectVersion",
           "s3:PutObject",
           "s3:ListBucket"
@@ -92,7 +92,9 @@ resource "aws_iam_policy" "codebuild_policy" {
           "logs:*",
           "route53:*",
           "acm:*",
-          "secretsmanager:*"
+          "secretsmanager:*",
+          "codepipeline:*",
+          "codebuild:*"
         ]
         Resource = "*"
       },
