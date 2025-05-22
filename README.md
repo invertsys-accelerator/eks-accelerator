@@ -85,9 +85,9 @@ There will be two repositories:
 Update the tfvars/non-prod/terraform.tfvars : vpc name, cluster name etc..
 Make sure subnets are created follow naming convention, so data.tf can read the values
 
-$var.vpc_name}-Compute* private eks nodes will be hosted
-${var.vpc_name}-FrontEnd* public load balabcers open to internet
-${var.vpc_name}-Data*" private data for databases
+var.vpc_name-Compute* private eks nodes will be hosted
+var.vpc_name-FrontEnd* public load balabcers open to internet
+var.vpc_name-Data*" private data for databases
 
 ## Using run-terraform.sh
 Prerequisites is to setup backend infrastructure
@@ -126,9 +126,9 @@ run the ./setup-backend.sh
 
 Deployment of Code pipeline:
 
-1. clone the repository
+1. create the repository of your tool, clone the repository and update eks-accelerator code to repo
 2. cd cicd
-3. Update the values in `terraform.tfvars` with your specific configuration.
+3. Update the values in `terraform.tfvars` with your specific configuration under cicd folder 
 
 4. Initialize Terraform:
 
