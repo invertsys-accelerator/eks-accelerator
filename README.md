@@ -153,13 +153,13 @@ terraform apply
 
 ## Upgrade the eks cluster, addons and karpenter
 
-Please note: perform this upgraded lower to higher environments.  
+Please note: perform this upgrade lower to higher environments.  
 
-1. Upgrade EKS cluster and run terraform apply, EKS manaaged node groups will be updated automcatically
+1. Upgrade EKS cluster and run terraform apply, EKS managed node groups will be updated automatically
 2. Upgrade EKS Addons and run teraform apply
 3. Upgrade Karpenter and run terraform apply
 
-If you want upgrade only eks-manged nodes, updated the eks.tf managed nodes with latest ami and terraform apply. That will upgrade only eks managed ndoes
+If you want upgrade only eks-managed nodes, updated the eks.tf managed nodes with latest ami and terraform apply. That will upgrade only eks managed ndoes
 
 ## Deployment of application Pods
 
