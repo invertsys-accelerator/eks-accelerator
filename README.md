@@ -6,7 +6,7 @@ This pattern deploys reusable EKS Terraform code across multiple accounts. It as
 
 This repository contains EKS deployment code in Terraform. This code deploys an EKS Cluster, EKS Managed nodes, EKS Addons, and Karpenter to scale nodes.
 
-![EKS Architecture](./images/eks-arch.png)
+![EKS Architecture](./images/eks-arch.jpg)
 
 ## EKS Cluster
 
@@ -50,13 +50,13 @@ Karpenter is installed using Helm. Karpenter will scale the nodes based on defin
 
 Every application has its own dedicated namespace, service account, and dedicated load balancer.
 
-![App Architecture](./images/app-arch.png)
+![App Architecture](./images/app-arch.jpg)
 
 ## Logs and Metrics
 
 Fluent Bit and CloudWatch metrics run as DaemonSets. They collect logs from nodes and write to CloudWatch logs.
 
-![Logs Architecture](./images/logs-arch.png)
+![Logs Architecture](./images/logs-arch.jpg)
 
 ## CI/CD Architecture
 
