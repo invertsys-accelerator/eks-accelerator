@@ -48,7 +48,7 @@ Karpenter is installed using Helm. Karpenter will scale the nodes based on defin
 
 ## Application Architecture
 
-Every application has its own dedicated namespace, service account, and dedicated load balancer.
+Every application has its own dedicated namespace, service account, and dedicated load balancer. Contains two pools ( System pool and Node pool). System pool is for eks addons and node pool is for application pods
 
 ![App Architecture](./images/app-arch.jpg)
 
@@ -150,3 +150,19 @@ terraform apply
 7. Login into AWS console, go to codepipeline and configure pipeline point to the code repository
 
 8. Run the Code pipeline
+
+## Upgrade the eks cluster, addons and karpenter
+
+Please note: perform this upgraded lower to higher environments.  
+
+1. Upgrade EKS cluster and run terraform apply, EKS manaaged node groups will be updated automcatically
+2. Upgrade EKS Addons and run teraform apply
+3. Upgrade Karpenter and run terraform apply
+
+if you want upgrade only eks-manged nodes, updated the eks.tf managed nodes with latest ami and terraform apply. That will upgrade only eks managed ndoes
+
+## Deployment of application Pods
+
+1. Please use nodeselctor to place application pods in karpenter managed node pool
+    nodeSelector:
+        workload: app-general
