@@ -159,7 +159,7 @@ Please note: perform this upgraded lower to higher environments.
 2. Upgrade EKS Addons and run teraform apply
 3. Upgrade Karpenter and run terraform apply
 
-if you want upgrade only eks-manged nodes, updated the eks.tf managed nodes with latest ami and terraform apply. That will upgrade only eks managed ndoes
+If you want upgrade only eks-manged nodes, updated the eks.tf managed nodes with latest ami and terraform apply. That will upgrade only eks managed ndoes
 
 ## Deployment of application Pods
 
