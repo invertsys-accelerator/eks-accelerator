@@ -180,7 +180,7 @@ module "eks_blueprints_addons" {
     chart      = "argo-cd"
     repository = "https://argoproj.github.io/argo-helm"
     namespace  = "argocd"
-    version    = "5.51.6"
+    chart_version    = "8.0.10"
 
     set = [
       # Change service type to ClusterIP since we're using Ingress
