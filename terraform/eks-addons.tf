@@ -173,117 +173,75 @@ module "eks_blueprints_addons" {
     ]
   }
 
-  # ArgoCD Configuration
+  # ArgocD Addons Condifuration
   enable_argocd = true
   argocd = {
-    name       = "argocd"
-    chart      = "argo-cd"
-    repository = "https://argoproj.github.io/argo-helm"
-    namespace  = "argocd"
-    chart_version    = "8.0.10"
+    name          = "argocd"
+    chart         = "argo-cd"
+    repository    = "https://argoproj.github.io/argo-helm"
+    namespace     = "argocd"
+    chart_version = "8.0.14"
+    
+    values = [
+      <<-EOT
+      global:
+        domain: null # argocd.example.com
+      server:
+        service:
+          type: ClusterIP
+        
+        ingress:
+          enabled: true
+          ingressClassName: alb
+          hosts: null
+          hostanme: null # argocd.example.com
+          rules:
+            - http:
+                paths:
+                  - path: /*
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: argocd-argocd-server
+                        port:
+                          number: 443
+          annotations:
+            kubernetes.io/ingress.class: alb
+            alb.ingress.kubernetes.io/scheme: internet-facing
+            alb.ingress.kubernetes.io/target-type: ip
+            alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+            alb.ingress.kubernetes.io/security-groups: ${aws_security_group.argocd_alb.id}
+            alb.ingress.kubernetes.io/backend-protocol: HTTP
+            alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+            alb.ingress.kubernetes.io/healthcheck-port: "8080"
+            alb.ingress.kubernetes.io/healthcheck-path: /
+            alb.ingress.kubernetes.io/tags: web-acl=internal,environment=prod,scope=regional
+            alb.ingress.kubernetes.io/conditions.hosts: ""
+            # alb.ingress.kubernetes.io/certificate-arn: <arn>
+            # alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-2-2017-01
+        configEnabled: true
+        name: argocd-server
+        
+        extraArgs:
+          - --insecure
+        
+        serviceAccount:
+          annotations:
+            eks.amazonaws.com/role-arn: ${module.argocd_irsa_role.iam_role_arn}
+        
+        nodeSelector:
+          workload: system
 
-    set = [
-      # Change service type to ClusterIP since we're using Ingress
-      {
-        name  = "server.service.type"
-        value = "ClusterIP"
-      },
-      # Enable Ingress
-      {
-        name  = "server.ingress.enabled"
-        value = "true"
-      },
-      {
-        name  = "server.ingress.annotations.kubernetes\\.io/ingress\\.class"
-        value = "alb"
-      },
-      {
-        name  = "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/scheme"
-        value = "internet-facing"
-      },
-      {
-        name  = "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/target-type"
-        value = "ip"
-      },
-      {
-        name  = "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/listen-ports"
-        value = "[{\"HTTPS\":443}]" # 
-      },
-      {
-        name  = "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/security-groups"
-        value = aws_security_group.argocd_alb.id
-      },
-      {
-        name  = "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/certificate-arn"
-        value = "<ACM ARN>" # updaed ACMR ARN
-      },
-      {
-        name  = "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/ssl-policy"
-        value = "ELBSecurityPolicy-TLS-1-2-2017-01"
-      },
-      {
-        name  = "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/backend-protocol"
-        value = "HTTPS"
-      },
-      {
-        name  = "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/healthcheck-protocol"
-        value = "HTTPS"
-      },
-      {
-        name  = "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/healthcheck-port"
-        value = "8080"
-      },
-      {
-        name  = "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/healthcheck-path"
-        value = "/"
-      },
-      {
-        name  = "server.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/success-codes"
-        value = "200"
-      },
-      {
-        name  = "server.configEnabled"
-        value = "true"
-      },
-      {
-        name  = "server.name"
-        value = "argocd-server"
-      },
-      {
-        name  = "server.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-        value = module.argocd_irsa_role.iam_role_arn
-      },
-      {
-        name  = "repoServer.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-        value = module.argocd_irsa_role.iam_role_arn
-      },
-      {
-        name  = "controller.args.appResyncPeriod"
-        value = "30"
-      },
-      {
-        name  = "controller.args.repoServerTimeoutSeconds"
-        value = "15"
-      },
-      # Additional server configuration for HTTPS
-      {
-        name  = "server.extraArgs[0]"
-        value = "--insecure" # Required for ALB health checks
-      },
-      {
-        name  = "nodeSelector.workload"
-        value = "system"
-      },
-      # Add default path pattern
-      {
-        name  = "server.ingress.paths[0]"
-        value = "/*"
-      },
-      # Remove host setting
-      {
-        name  = "server.ingress.hosts"
-        value = ""
-      }
+      repoServer:
+        serviceAccount:
+          annotations:
+            eks.amazonaws.com/role-arn: ${module.argocd_irsa_role.iam_role_arn}
+
+      controller:
+        args:
+          appResyncPeriod: "30"
+          repoServerTimeoutSeconds: "15"
+      EOT
     ]
   }
 }

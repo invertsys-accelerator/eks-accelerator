@@ -59,6 +59,11 @@ resource "helm_release" "karpenter" {
     module.karpenter,
     time_sleep.wait_for_addons
   ]
+   lifecycle {
+    ignore_changes = [
+      repository_password
+    ]
+  }
 }
 
 # Add explicit wait time for kubectl provider to be properly initialized
