@@ -40,7 +40,7 @@ This repository contains EKS deployment code in Terraform. This code deploys an 
 | Secrets Manager | Read AWS Secrets Manager |
 | Argocd | Deploy Helm templates 
 
-Note: ArgoCD is currently configured to use port 80 on AWS Application Load Balancer (ALB). To enable SSL on your ArgoCD installation, you'll need to make the following modifications in the eks-addons.tf file: add port 443 on line 203, add your domain certificate on line 211, and uncomment lines 209-216. These changes will enable secure HTTPS access to your ArgoCD installation.
+Note: ArgoCD is currently configured to use port 80 on AWS Application Load Balancer (ALB). To enable SSL on your ArgoCD installation, you'll need to make the following modifications in the eks-addons.tf file: add port 443, add your domain certificate. These changes will enable secure HTTPS access to your ArgoCD installation.
 
 ## Karpenter
 
