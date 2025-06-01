@@ -273,6 +273,16 @@ module "eks_blueprints_addons" {
       {
         name  = "nodeSelector.workload"
         value = "system"
+      },
+      # Add default path pattern
+      {
+        name  = "server.ingress.paths[0]"
+        value = "/*"
+      },
+      # Remove host setting
+      {
+        name  = "server.ingress.hosts"
+        value = ""
       }
     ]
   }
